@@ -17,6 +17,7 @@ func main() {
 	r := gin.Default()
 	r.GET("/question/:id", getQuestionByID)
 	r.GET("/question", getRandomQuestion)
+	r.GET("/questions", getListOfQuestions)
 
 	r.Run("0.0.0.0:8080")
 }
@@ -44,13 +45,15 @@ func getRandomQuestion(c *gin.Context) {
 	c.JSON(http.StatusOK, randQuestion)
 }
 
-// func getListOfQuestions(c *gin.Context) {
-// 	questionsList := []questions{}
+func getListOfQuestions(c *gin.Context) {
+	questionsList := []questions{}
 
-// 	for _, q := range QuestionOfTheDay {
-// 		questionsList = append(questionsList, q)
-// 	}
-// }
+	for _, q := range QuestionOfTheDay {
+		questionsList = append(questionsList, q)
+	}
+
+	c.JSON(http.StatusOK, questionsList)
+}
 
 var QuestionOfTheDay = map[string]questions{
 	"88137df0-b7a8-4c91-ace7-a8a27953fb22": {"88137df0-b7a8-4c91-ace7-a8a27953fb22", "What is your favorite book?"},
