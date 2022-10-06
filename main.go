@@ -1,7 +1,11 @@
 package main
 
 import (
+	"math/rand"
+
 	"github.com/gin-gonic/gin"
+
+	"net/http"
 )
 
 type questions struct {
@@ -11,9 +15,42 @@ type questions struct {
 
 func main() {
 	r := gin.Default()
+	r.GET("/question/:id", getQuestionByID)
+	r.GET("/question", getRandomQuestion)
 
 	r.Run("0.0.0.0:8080")
 }
+
+func getQuestionByID(c *gin.Context) {
+	id := c.Param("id")
+
+	getQuestion := QuestionOfTheDay[id]
+	getSpecificQuestion := getQuestion.Question
+
+	c.JSON(http.StatusOK, getSpecificQuestion)
+}
+
+func getRandomQuestion(c *gin.Context) {
+	questionSlice := []string{}
+
+	for k := range QuestionOfTheDay {
+		questionSlice = append(questionSlice, k)
+	}
+
+	randNum := rand.Intn(len(questionSlice))
+	randKey := questionSlice[randNum]
+	randQuestion := QuestionOfTheDay[randKey]
+
+	c.JSON(http.StatusOK, randQuestion)
+}
+
+// func getListOfQuestions(c *gin.Context) {
+// 	questionsList := []questions{}
+
+// 	for _, q := range QuestionOfTheDay {
+// 		questionsList = append(questionsList, q)
+// 	}
+// }
 
 var QuestionOfTheDay = map[string]questions{
 	"88137df0-b7a8-4c91-ace7-a8a27953fb22": {"88137df0-b7a8-4c91-ace7-a8a27953fb22", "What is your favorite book?"},
